@@ -17,18 +17,20 @@ struct SplashScreenView: View {
             ContentView()
         } else {
             ZStack {
-                Color.red
-                    .opacity(0.60)
-                    .ignoresSafeArea()
+                LinearGradient(colors: [.red , .black],
+                               startPoint: .topLeading,
+                               endPoint: .bottomTrailing
+                ).edgesIgnoringSafeArea(.all)
+                
                 VStack {
                     VStack {
                         Image(systemName: "house")
                             .font(.system(size: 250))
-                            .foregroundColor(.black)
+                            .foregroundColor(.orange.opacity(0.70))
                         
                         Text("Hypotheek Calculator")
                             .font(Font.custom("Baskerville-Bold", size: 26))
-                            .foregroundColor(.black.opacity(0.80))
+                            .foregroundColor(.orange.opacity(0.70))
                     }
                     .scaleEffect(size)
                     .opacity(opacity)
@@ -49,10 +51,10 @@ struct SplashScreenView: View {
             }
         }
     }
+}
     
-    struct SplashScreenView_Previews: PreviewProvider {
-        static var previews: some View {
-            SplashScreenView()
+struct SplashScreenView_Previews: PreviewProvider {
+    static var previews: some View {
+        SplashScreenView()
         }
-    }
 }

@@ -55,10 +55,9 @@
 		9C9B9A2729522305003BE10E /* Mortgage-Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				9CBA12DA29556E080029297C /* Utils */,
+				9CBA12D929556DEA0029297C /* Views */,
 				9C9B9A2829522305003BE10E /* Mortgage_CalculatorApp.swift */,
-				9C9B9A2A29522305003BE10E /* ContentView.swift */,
-				9CBA12BB295430BF0029297C /* KeyBoard.swift */,
-				9CBA12BD29545C1D0029297C /* SplashScreenView.swift */,
 				9C9B9A2C29522306003BE10E /* Assets.xcassets */,
 				9C9B9A2E29522306003BE10E /* Preview Content */,
 			);
@@ -71,6 +70,23 @@
 				9C9B9A2F29522306003BE10E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9CBA12D929556DEA0029297C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9CBA12BD29545C1D0029297C /* SplashScreenView.swift */,
+				9C9B9A2A29522305003BE10E /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9CBA12DA29556E080029297C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9CBA12BB295430BF0029297C /* KeyBoard.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

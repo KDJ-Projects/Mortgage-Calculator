@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State var showmonthlyPaymentCard: Bool = false // shows payment card when button is pushed
     @State var showHousIcon: Bool = true // hide's house image when button is pushed
+    @State var showDetailInfoCard: Bool = false
     
     // main variables
     @State private var myPrincipal = ""
@@ -18,18 +19,19 @@ struct ContentView: View {
     
     // calculation variables
     @State private var monthlyPayment = ""
-//    @State private var isVisible : Bool = false
+    @State private var monthlyPrincipals = ""
+    @State private var monthlyIntrest = ""
     
-    
-    // Let's keyboard disapear when button is pressed
+    // let's keyboard disapear when button is pressed
     private enum Field: Double {
         case myPrincipal, myInterestRate, myTerms
     }
     @FocusState private var focusedField: Field?
     
-    // MARK: Calculations
+    // caculation section
     private func caclulateMortgage() {
         
+        // monthly card payment calculations
         var numberOfMonthlyPayments : Double {
             guard let m = Double(myTerms),
                   let n = Optional(12.00) else { return 0 }
@@ -37,7 +39,7 @@ struct ContentView: View {
             return m * n
         }
         
-        var percentageCalculation : Double {
+        var monthPercentage : Double {
             guard let m = Double(myInterestRate),
                   let n = Optional(100.00),
                   let o = Optional(12.00) else { return 0 }
@@ -48,7 +50,7 @@ struct ContentView: View {
         
         var monthlyPaymentAmount : Double {
             guard let principal = Double(myPrincipal),
-                  let rate = Optional(percentageCalculation),
+                  let rate = Optional(monthPercentage),
                   let numPayments = Optional(numberOfMonthlyPayments) else { return 0}
             
             return (rate * principal * (pow(1 + rate, numPayments))) / ((pow(1 + rate, numPayments)) - 1)
@@ -57,39 +59,69 @@ struct ContentView: View {
         let netMonthlyPayment = String(format: "%.2f", monthlyPaymentAmount)
         monthlyPayment = "Te betalen: \(netMonthlyPayment) €"
         
+        // detail card payment calculations
+        var netMonthlyPrincipal : Double {
+            guard let principal = Double(myPrincipal),
+                  let numPeriods = Optional(numberOfMonthlyPayments) else { return 0 }
+            
+            return principal / numPeriods
+        }
+        let netPrincipals = String(format: "%.2f", netMonthlyPrincipal)
+        monthlyPrincipals = "Basis maand aflossing: \(netPrincipals) €"
+        
+        var netMonthlyPercentage : Double {
+            guard let basePayment = Optional(monthlyPaymentAmount),
+                  let basePrincipal = Optional(netMonthlyPrincipal) else { return 0 }
+            
+            return basePayment - basePrincipal
+        }
+        let netBase = String(format: "%.2f", netMonthlyPercentage)
+        monthlyIntrest = "Maandelijkse intrest: \(netBase) €"
         
     }
-    // MARK: Main view
+    // main view section
     var body: some View {
         ZStack {
-            Color("BackgroundColor")
+            LinearGradient(colors: [.red , .black], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
                 VStack(alignment: .center) {
+                    
+                    // title of the app
                     Text("Hypotheek Calculator")
                         .foregroundColor(.yellow)
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                     
+                    // shows the house icon above the view
                     if self.showHousIcon {
                         VStack {
-                            Image(systemName: "house.fill")
-                                .font(.system(size: 100))
-                                .frame(width: 100, height: 200)
-                                .foregroundColor(.yellow)
+                            HStack(spacing: 70.0) {
+                                Image(systemName: "house.fill")
+                                    .font(.system(size: 100))
+                                    .frame(width: 100, height: 200)
+                                    .foregroundColor(.yellow)
+                                
+                                Image(systemName: "eurosign.square.fill")
+                                    .font(.system(size: 100))
+                                    .frame(width: 100, height: 200)
+                                    .foregroundColor(.yellow)
+                            }
                         }
                         .zIndex(1)
                     }
                     
-                    // MARK: Payment Card
+                    // payment info card section
                     if self.showmonthlyPaymentCard {
                         VStack {
                             Text("Maandelijkse aflossing")
                                 .foregroundColor(.gray)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
+                            
                             Spacer()
+                
                             Text("\(monthlyPayment)")
                                 .foregroundColor(.yellow)
                                 .font(.system(size: 16))
@@ -101,12 +133,43 @@ struct ContentView: View {
                         .cornerRadius(20)
                         .shadow(radius: 20)
                         .padding(.top, 50)
+                        .padding(.bottom, 20)
+                        .zIndex(1)
+                    }
+                    
+                    // detail info card section
+                    if self.showDetailInfoCard {
+                        VStack {
+                            Text("Detail hypotheek lening")
+                                .foregroundColor(.gray)
+                                .font(.system(size: 16))
+                                .fontWeight(.bold)
+                            
+                            Spacer()
+                            
+                            Text("\(monthlyPrincipals)")
+                                .foregroundColor(.yellow)
+                                .font(.system(size: 16))
+                                .fontWeight(.bold)
+                            
+                            Spacer()
+                            
+                            Text("\(monthlyIntrest)")
+                                .foregroundColor(.yellow)
+                                .font(.system(size: 16))
+                                .fontWeight(.bold)
+                        }
+                        .frame(width: 300, height: 50)
+                        .padding(30)
+                        .background(Color.black)
+                        .cornerRadius(20)
+                        .shadow(radius: 20)
                         .padding(.bottom, 30)
                         .zIndex(1)
                     }
                 }
                 
-                // MARK: Input Card
+                // input info card section
                 VStack {
                     VStack {
                         HStack {
@@ -116,6 +179,7 @@ struct ContentView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.gray)
                                 .padding(10)
+
                             TextField("0.00", text: $myPrincipal)
                                 .focused($focusedField, equals: .myPrincipal)
                                 .frame(width: 70)
@@ -152,6 +216,7 @@ struct ContentView: View {
                                 .keyboardType(.numbersAndPunctuation)
                         }
                         
+                        // button section
                         HStack {
                             Button {
                                 caclulateMortgage()
@@ -160,12 +225,11 @@ struct ContentView: View {
                                 withAnimation {
                                     self.showmonthlyPaymentCard.toggle()
                                     self.showHousIcon.toggle()
+                                    self.showDetailInfoCard.toggle()
                                 }
                                 
-//                                self.showmonthlyPaymentCard = true
-//                                self.showHousIcon = false
                             } label: {
-                                Label("BEREKEN BEDRAG", systemImage: "eurosign")
+                                Label("BEREKEN LENING", systemImage: "eurosign")
                             }
                             .tint(.yellow)
                             .buttonStyle(.bordered)
@@ -177,14 +241,12 @@ struct ContentView: View {
                     .background(Color.black)
                     .cornerRadius(20)
                     .shadow(radius: 20)
-                    
-                    // output card
                 }
-//                .KeyboardResponsive() // This makes pushes up the view when keyboard apears
+//                .KeyboardResponsive() // pushes the view up when the keyboard apears (KeyBoard.swift)
                 
                 Spacer()
                 
-                // MARK: footer
+                // footer section
                 VStack {
                     Text("®Created by KDJ")
                         .foregroundColor(.gray)
@@ -195,6 +257,7 @@ struct ContentView: View {
         }
     }
 }
+
     
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
