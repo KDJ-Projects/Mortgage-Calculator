@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var showmonthlyPaymentCard: Bool = false // shows payment card when button is pushed
-    @State var showHousIcon: Bool = true // hide's house image when button is pushed
-    @State var showDetailInfoCard: Bool = false
+    @State var showmonthlyPaymentCard: Bool = false /// shows payment card when button is pushed
+    @State var showHousIcon: Bool = true /// hide's house image when button is pressed
+    @State var showDetailInfoCard: Bool = false /// shows details info cards when button is pressed
     
     // main variables
     @State private var myPrincipal = ""
@@ -57,7 +57,7 @@ struct ContentView: View {
         }
         
         let netMonthlyPayment = String(format: "%.2f", monthlyPaymentAmount)
-        monthlyPayment = "Te betalen: \(netMonthlyPayment) €"
+        monthlyPayment = "\(netMonthlyPayment) €"
         
         // detail card payment calculations
         var netMonthlyPrincipal : Double {
@@ -84,17 +84,17 @@ struct ContentView: View {
         ZStack {
             LinearGradient(colors: [.red , .black], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)
-
+            
             VStack {
                 VStack(alignment: .center) {
                     
-                    // title of the app
+                    /// title of the app
                     Text("Hypotheek Calculator")
                         .foregroundColor(.yellow)
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                     
-                    // shows the house icon above the view
+                    /// shows the house icon above the view
                     if self.showHousIcon {
                         VStack {
                             HStack(spacing: 70.0) {
@@ -112,74 +112,68 @@ struct ContentView: View {
                         .zIndex(1)
                     }
                     
-                    // payment info card section
+                    /// payment info card section
                     if self.showmonthlyPaymentCard {
-                        VStack {
-                            Text("Maandelijkse aflossing")
+                        VStack(alignment: .center, spacing: 10) {
+                            Text("Maand aflossingen")
                                 .foregroundColor(.gray)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
                             
-                            Spacer()
-                
                             Text("\(monthlyPayment)")
                                 .foregroundColor(.yellow)
-                                .font(.system(size: 16))
+                                .font(.system(size: 30))
                                 .fontWeight(.bold)
                         }
-                        .frame(width: 300, height: 50)
-                        .padding(30)
-                        .background(Color.black)
-                        .cornerRadius(20)
-                        .shadow(radius: 20)
-                        .padding(.top, 50)
-                        .padding(.bottom, 20)
                         .zIndex(1)
+                        .frame(width: 300, height: 100)
+                        .background(.black.gradient.shadow(.inner(radius: 20)))
+                        .cornerRadius(20)
+                        .shadow(color: .black, radius: 20)
+                        .blur(radius: 0.2)
+                        .padding(.top, 20)
+                        
                     }
                     
-                    // detail info card section
+                    /// detail info card section
                     if self.showDetailInfoCard {
-                        VStack {
-                            Text("Detail hypotheek lening")
+                        VStack(alignment: .center, spacing: 10) {
+                            Text("Detail hypotheek")
                                 .foregroundColor(.gray)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
-                            
-                            Spacer()
                             
                             Text("\(monthlyPrincipals)")
                                 .foregroundColor(.yellow)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
                             
-                            Spacer()
-                            
                             Text("\(monthlyIntrest)")
                                 .foregroundColor(.yellow)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
                         }
-                        .frame(width: 300, height: 50)
-                        .padding(30)
-                        .background(Color.black)
+                        .frame(width: 300, height: 100)
+                        .background(.black.gradient.shadow(.inner(radius: 20)))
                         .cornerRadius(20)
-                        .shadow(radius: 20)
-                        .padding(.bottom, 30)
+                        .shadow(color: .black, radius: 20)
+                        .blur(radius: 0.2)
+                        .padding(.top, 20)
                         .zIndex(1)
                     }
                 }
                 
-                // input info card section
+                /// input info card section
                 VStack {
                     VStack {
                         HStack {
-                            Text("Leen bedrag (€)")
+                            Text("Bedrag (€)")
                                 .frame(width: 200, alignment: .leading)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
                                 .foregroundColor(.gray)
                                 .padding(10)
-
+                            
                             TextField("0.00", text: $myPrincipal)
                                 .focused($focusedField, equals: .myPrincipal)
                                 .frame(width: 70)
@@ -202,7 +196,7 @@ struct ContentView: View {
                         }
                         
                         HStack {
-                            Text("Looptijd lening (Jaar)")
+                            Text("Looptijd (Jaar)")
                                 .frame(width: 200, alignment: .leading)
                                 .font(.system(size: 16))
                                 .fontWeight(.bold)
@@ -216,7 +210,7 @@ struct ContentView: View {
                                 .keyboardType(.numbersAndPunctuation)
                         }
                         
-                        // button section
+                        /// button section
                         HStack {
                             Button {
                                 caclulateMortgage()
@@ -238,15 +232,12 @@ struct ContentView: View {
                     }
                     .frame(width: 300, height: 200)
                     .padding(30)
-                    .background(Color.black)
-                    .cornerRadius(20)
-                    .shadow(radius: 20)
                 }
 //                .KeyboardResponsive() // pushes the view up when the keyboard apears (KeyBoard.swift)
                 
                 Spacer()
                 
-                // footer section
+                /// footer section
                 VStack {
                     Text("®Created by KDJ")
                         .foregroundColor(.gray)
@@ -258,7 +249,7 @@ struct ContentView: View {
     }
 }
 
-    
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
